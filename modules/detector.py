@@ -4,6 +4,7 @@ import numpy as np
 from tracker import *
 
 tracker = EuclideanDistTracker()
+k_tracker = cv2.TrackerKCF_create()
 
 
 class Detector:
@@ -17,7 +18,7 @@ class Detector:
         )
         self.model.classes = 2
 
-        self.detect()
+        self.detect_kcf()
 
     def detect(self):
         cap = cv2.VideoCapture(self.stream)
@@ -51,6 +52,30 @@ class Detector:
                 break
         cap.release()
         cv2.destroyAllWindows()
+
+    def detect_kcf(self):
+        cap = cv2.VideoCapture(self.stream)
+        ret, frame = cap.read()
+        results = self.model(frame)
+        _results = np.squeeze(results.render())
+        detections = results.pandas().xyxy[0].values.tolist()
+        xi, yi, xm, ym, conf, cls, nm = detections[0]
+
+        bbox = np.array([int(xi), int(yi), int(xm - xi), int(ym - yi)])
+        k_tracker.init(frame, bbox)
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            (success, box) = k_tracker.update(frame)
+            if success:
+                (x, y, w, h) = [int(a) for a in box]
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.imshow("stream", frame)
+
+            key = cv2.waitKey(30)
+            if key == 27:
+                break
 
 
 if __name__ == "__main__":
