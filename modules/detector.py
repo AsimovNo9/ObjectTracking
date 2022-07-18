@@ -74,7 +74,3 @@ class Detector:
             key = cv2.waitKey(30)
             if key == 27:
                 break
-
-
-if __name__ == "__main__":
-    Detector("yolov5n6.pt", "./data/traffic.mp4")
