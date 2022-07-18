@@ -1,7 +1,7 @@
 import torch
 import cv2
 import numpy as np
-from tracker import *
+from modules.tracker import *
 
 tracker = EuclideanDistTracker()
 k_tracker = cv2.TrackerKCF_create()
@@ -17,8 +17,6 @@ class Detector:
             "ultralytics/yolov5", "custom", path=self.model_path + self.model_name
         )
         self.model.classes = 2
-
-        self.detect_kcf()
 
     def detect(self):
         cap = cv2.VideoCapture(self.stream)
