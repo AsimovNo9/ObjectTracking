@@ -1,5 +1,5 @@
 
-**Author: Adedamola Sode </br>
+>**Author: Adedamola Sode </br>
 **Email: adedamola.sode@gmail.com
 
 # Working With Tracking Algorithms 
